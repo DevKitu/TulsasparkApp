@@ -1,51 +1,4 @@
 const mongoose= require('mongoose');
-const bcrypt= require('bcryptjs');
-const config = require('../../config/database');
-
-// Address Schema
-const addressSchema = mongoose.Schema({
-    addressType: {
-                type: String,
-                
-    },
-    street: {
-        type: String,
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
-    province: {
-        type: String,
-        required: true
-    },
-    country: {
-        type: String,
-        required: true
-    },
-});
-
-// Bank details Schema
-const bankDetailsSchema = mongoose.Schema({
-    bankName: {
-                type: String,
-                required: true
-    },
-    branchName: {
-        type: String,
-        required: true
-    },
-    accountNumber: {
-        type: Number,
-        required: true
-    },
-    accountHolderName: {
-        type: String,
-        required: true
-    },
-   
-});
 
 
 //Harvester Schema
@@ -53,49 +6,89 @@ const HarvesterSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
-    },
+      },
     surName: {
         type: String,
         required: true
-    },
-    dateOfBirth: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
+      },
     idNumber: {
         type: String,
         required: true
-    },
+      },
     gender: {
         type: String,
         required: true
-    },
+      },
     email: {
         type: String,
         required: true
-    },
-    cellphone: {
+      },
+    phoneNumber: {
         type: String,
         required: true
-    },
-    address: {
+      },
+    dateOfBirth: {
         type: String,
         required: true
-    },
-    address: addressSchema,
+      },
     
-    bankDetails: bankDetailsSchema,
+    bankDetails: {
+        
+        bankName: {
+            type: String,
+            required: true
+        },
+        branch: {
+            type: String,
+            required: true
+        },
+        accountNumber: {
+            type: Number,
+            required: true
+        },
+        accountHolderName: {
+            type: String,
+            required: true
+        },
+
+      },
+      address: {
+        addressType: {
+            type: String,
+            
+        },
+        street: {
+            type: String,
+            required: true
+        },
+        suburb: {
+            type: String,
+            required: true
+        },
+        city: {
+            type: String,
+            required: true
+        },
+        province: {
+            type: String,
+            required: true
+        },
+        country: {
+            type: String,
+            required: true
+        },
+      },
+    
 });
 
 const Harvester = module.exports = mongoose.model('Harvester', HarvesterSchema);
 
 module.exports.getHarvesterById = (id, callback)=>{
-    User.findById(id, callback);
+  Harvester.findById(id, callback);
 
 }
 
 module.exports.getHarvesterByUserName = (harvesterName, callback)=>{
     const query = {harvesterName: harvesterName}
-    User.findOne(query, callback);
+    Harvester.findOne(query, callback);
 }

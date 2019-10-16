@@ -1,23 +1,32 @@
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
+const LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport');
 const User = require('../models/user');
-const config = require('../config/database');
 
-module.exports = function(passport){
-  let opts = {};
-  opts.jwtFromRequest =  ExtractJwt.fromAuthHeaderWithScheme("jwt");
-  opts.secretOrKey = config.secret;
-  passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
-    User.getUserById(jwt_payload._doc._id, (err, user) => {
-      if(err){
-        return done(err, false);
-      }
 
-      if(user){
-        return done(null, user);
-      } else {
-        return done(null, false);
-      }
+passport.serializeUser((user, done) =>{
+    done(null, user.id);
+});
+
+passport.deserializeUser((id, done) =>{
+    User.findById(id, (err, user) =>{
+        done(err, user);
     });
-  }));
-}
+});
+
+passport.use('local.signup', new LocalStrategy({
+    usernameField: 'userName',
+    passwordField: 'password',
+    passReqToCallback: true
+}, (req, userName, password, done) => {
+    User.findOne({'email': email}, (err, user) => {
+        if(err) {
+            return done(err);
+        }
+        if (user) {
+            return done(null, false, {message:'user Name is already in use'});
+        }
+        const newUser = new User();
+        newUser.userName = userName;
+        newUser.password = password;
+    });
+}))
